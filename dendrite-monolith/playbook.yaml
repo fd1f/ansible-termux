@@ -16,11 +16,11 @@
     - name: Build Dendrite
       ansible.builtin.command: ./build.sh
       args:
-        chdir: {{ install_dir }}
+        chdir: "{{ install_dir }}"
     - name: Generate federation keys
       ansible.builtin.command: ./bin/generate-keys --private-key matrix_key.pem
       args:
-        chdir: {{ install_dir }}
+        chdir: "{{ install_dir }}"
     - name: Add Dendrite service
       ansible.builtin.template:
         src: ./templates/monolith.sh
