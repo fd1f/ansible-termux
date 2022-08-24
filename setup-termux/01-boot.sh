@@ -1,10 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/sh
 termux-wake-lock
-LOG_LOCATION=$PREFIX/var/log/boot-scripts.log
-echo "$(date) | bringing up services" >> $LOG_LOCATION
+LOG_DIR=$PREFIX/var/log
+MAIN_LOG=$LOG_DIR/boot-scripts.log
 
-for script in $HOME/.config/boot-scripts/*
+touch $MAIN_LOG
+echo "$(date) | bringing up services" >> $MAIN_LOG
+for script in ~/.config/boot-scripts/*
 do
-	echo "$(date) | starting $script" >> $LOG_LOCATION
-	exec $script || echo "$(date) | $script failed to start!" >> $LOG_LOCATION
+	name="$(basename $script)"
+	touch $LOG_DIR/$name.log
+	echo "$(date) | starting $script" >> $MAIN_LOG
+	exec $script >> $LOG_DIR/$name.log || echo "$(date) | $script failed to start!" >> $MAIN_LOG
 done
