@@ -1,0 +1,17 @@
+all:
+  hosts:
+    boop:
+      server_name: dendrite-test.hackwithht.ml
+      well_known_server_name: dendrite-test.hackwithht.ml
+      disable_federation: false
+      registration_disabled: false
+      guests_disabled: true
+    phone2:
+      server_name: dendrite-test2.hackwithht.ml
+      well_known_server_name: dendrite-test2.hackwithht.ml
+      disable_federation: false
+      registration_disabled: true
+      guests_disabled: true
+      install_dir: ~/dendrite-dir/dendrite
+  vars:
+    install_dir: ~/dendrite
