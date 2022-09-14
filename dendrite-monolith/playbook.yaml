@@ -17,10 +17,15 @@
       ansible.builtin.command: ./build.sh
       args:
         chdir: "{{ install_dir }}"
+    - name: Check if federation keys exist
+      ansible.builtin.stat:
+        path: "{{ install_dir }}/matrix_key.pem"
+      register: key
     - name: Generate federation keys
       ansible.builtin.command: ./bin/generate-keys --private-key matrix_key.pem
       args:
         chdir: "{{ install_dir }}"
+      when: key.stat.isreg is not defined
     - name: Add Dendrite service
       ansible.builtin.template:
         src: ./templates/monolith.sh
