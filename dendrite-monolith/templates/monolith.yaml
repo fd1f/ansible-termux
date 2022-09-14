@@ -1,4 +1,4 @@
-yy# This is the Dendrite configuration file.
+# This is the Dendrite configuration file.
 #
 # The configuration is split up into sections - each Dendrite component has a
 # configuration section, in addition to the "global" section which applies to
