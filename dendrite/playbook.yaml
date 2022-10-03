@@ -5,28 +5,42 @@
       ansible.builtin.apt:
         name: golang
         install_recommends: no
+        
     - name: Clone Dendrite
       ansible.builtin.git: 
         repo: 'https://github.com/matrix-org/dendrite'
         dest: "{{ install_dir }}"
-    - name: Create Dendrite config
-      ansible.builtin.template:
-        src: ./templates/monolith.yaml
-        dest: "{{ install_dir }}/dendrite.yaml"
+      register: repo
+
+      #only build if code changed or it's freshly cloned
     - name: Build Dendrite
       ansible.builtin.command: ./build.sh
       args:
         chdir: "{{ install_dir }}"
+      when: repo.before != repo.after
+      
+    - name: Create Dendrite config
+      ansible.builtin.template:
+        src: ./templates/monolith.yaml
+        dest: "{{ install_dir }}/dendrite.yaml"
+        
     - name: Check if federation keys exist
       ansible.builtin.stat:
         path: "{{ install_dir }}/matrix_key.pem"
       register: key
+
+      # only make keys if none present
     - name: Generate federation keys
       ansible.builtin.command: ./bin/generate-keys --private-key matrix_key.pem
       args:
         chdir: "{{ install_dir }}"
       when: key.stat.isreg is not defined
-    - name: Add Dendrite service
+
+    - name: Set up service directories
+      ansible.builtin.script: ./scripts/service_dirs.sh
+
+    - name: Add service script
       ansible.builtin.template:
         src: ./templates/monolith.sh
-        dest: ~/.config/boot-scripts/dendrite.sh
+        dest: /data/data/com.termux/files/usr/var/service/dendrite/run
+      
