@@ -6,7 +6,7 @@ all:
       disable_federation: false
       registration_disabled: false
       guests_disabled: true
-    phone2:
+    alice:
       server_name: dendrite2.veryme.ga
       well_known_server_name: dendrite2.veryme.ga
       disable_federation: false
